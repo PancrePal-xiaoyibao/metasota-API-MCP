@@ -1,0 +1,73 @@
+---
+description: Rules for implementing MCP protocol handlers and tools
+---
+# MCP Protocol Implementation
+
+## MCP Server Setup
+- Use `@modelcontextprotocol/sdk` for all MCP functionality
+- Initialize server with `Server` class from SDK
+- Use `StdioServerTransport` for stdio communication
+- Server must implement `ListToolsRequestSchema` and `CallToolRequestSchema` handlers
+
+## Tool Definition Pattern
+```typescript
+const TOOL_NAME: ToolDefinition = {
+  name: 'tool_name',
+  description: 'Clear, concise description of what the tool does',
+  inputSchema: {
+    type: 'object',
+    properties: {
+      paramName: {
+        type: 'string',
+        description: 'Parameter description',
+        // Add enum, default, etc. as needed
+      },
+    },
+    required: ['paramName'],
+  },
+};
+```
+
+## Tool Handler Implementation
+- Always validate input parameters
+- Return results in MCP content format: `{ content: [{ type: 'text', text: '...' }] }`
+- Include `isError: true` in response for errors
+- Provide helpful error messages with context
+- Use descriptive emoji prefixes for better readability (🔍, 📄, ❌, etc.)
+
+## Response Format
+- Format search results in readable Markdown
+- Include metadata (count, summary) when available
+- Structure output for easy parsing by AI assistants
+- Use consistent formatting across all tools
+
+## Error Handling in MCP
+- Catch all errors in tool handlers
+- Return user-friendly error messages
+- Log detailed errors to stderr (console.error)
+- Never throw unhandled exceptions from tool handlers
+
+## Example Tool Handler
+```typescript
+this.server.setRequestHandler(CallToolRequestSchema, async (request) => {
+  const { name, arguments: args } = request.params;
+  try {
+    let result: string;
+    switch (name) {
+      case 'tool_name':
+        result = await performTool(args);
+        break;
+      default:
+        throw new Error(`未知工具: ${name}`);
+    }
+    return {
+      content: [{ type: 'text', text: result }],
+    };
+  } catch (error) {
+    return {
+      content: [{ type: 'text', text: `❌ 工具执行失败: ${error.message}` }],
+      isError: true,
+    };
+  }
+});
+```

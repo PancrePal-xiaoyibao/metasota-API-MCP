@@ -1,0 +1,53 @@
+---
+globs: *.ts,*.tsx
+---
+# TypeScript Coding Standards
+
+## Code Style
+- Use **strict mode** TypeScript configuration
+- Always use **semicolons**
+- Use **ES2022** target with **Node16** module resolution
+- Prefer **ES Modules** (`import/export`) over CommonJS
+- Use **async/await** for asynchronous operations (avoid callbacks)
+
+## Type Safety
+- Always define explicit types for function parameters and return values
+- Use `zod` schemas for runtime validation of external API responses
+- Avoid `any` type - use `unknown` if type is truly unknown, then narrow it
+- Use type guards and assertions when necessary
+
+## Error Handling
+- Always use try-catch blocks for async operations
+- Throw descriptive error messages with context
+- Handle `AxiosError` specifically for API errors
+- Return error information in MCP tool responses with `isError: true`
+
+## Code Organization
+- Group related functionality with clear section comments (e.g., `// ==================== 类型定义 ====================`)
+- Keep functions focused and single-purpose
+- Extract reusable logic into separate functions
+- Use classes for complex stateful components (e.g., `MetasoMCPServer`)
+
+## Naming Conventions
+- Use **camelCase** for variables and functions
+- Use **PascalCase** for classes and types
+- Use **UPPER_SNAKE_CASE** for constants
+- Use descriptive names that indicate purpose
+
+## Example Patterns
+```typescript
+// Good: Explicit types, error handling
+async function performSearch(params: SearchParams): Promise<string> {
+  try {
+    const response = await axiosInstance.post('/search', params);
+    const parsed = MetasoResponseSchema.parse(response.data);
+    // ... process results
+    return formattedOutput;
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      throw new Error(`API请求失败: ${error.response?.status}`);
+    }
+    throw error;
+  }
+}
+```

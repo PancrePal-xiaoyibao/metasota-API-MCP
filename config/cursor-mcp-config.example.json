@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "metaso": {
+      "command": "node",
+      "args": ["C:/path/to/metaso-search-mcp/dist/index.js"],
+      "env": {
+        "METASO_API_KEY": "mk-你的API密钥",
+        "METASO_DEFAULT_MODEL": "ds-r1"
+      }
+    }
+  }
+}
+

@@ -1,0 +1,43 @@
+---
+alwaysApply: true
+---
+# Metaso Search MCP Project Structure
+
+This is a Node.js/TypeScript project implementing a Model Context Protocol (MCP) server for Metaso Search API integration.
+
+## Project Overview
+- **Type**: MCP Server (stdio transport)
+- **Language**: TypeScript (ES2022, Node16 modules)
+- **Main Entry**: `src/index.ts` (compiled to `dist/index.js`)
+- **Package Manager**: npm
+- **Key Dependencies**: 
+  - `@modelcontextprotocol/sdk` - MCP protocol implementation
+  - `axios` - HTTP client for API calls
+  - `zod` - Schema validation
+
+## Project Structure
+```
+metasota_API_MCP/
+├── src/                    # TypeScript source files
+│   └── index.ts           # Main MCP server entry point
+├── dist/                   # Compiled JavaScript (generated)
+├── docs/                   # Documentation
+│   ├── # 秘塔搜索MCP工具开发完整方案.md
+│   └── 秘塔搜索API所有功能整理.md
+├── .cursor/rules/          # Cursor rules
+├── package.json            # Project configuration
+└── tsconfig.json          # TypeScript configuration
+```
+
+## Key Configuration
+- **API Endpoint**: `https://metaso.cn/api/v1`
+- **Authentication**: Bearer token via `METASO_API_KEY` environment variable
+- **Transport**: stdio (for MCP communication)
+- **Module System**: ES Modules (`"type": "module"`)
+
+## Development Workflow
+1. Source code in `src/` directory
+2. TypeScript compiles to `dist/` directory
+3. Use `npm run build` to compile
+4. Use `npm start` to run compiled code
+5. Binary entry point: `dist/index.js` (via `bin` in package.json)

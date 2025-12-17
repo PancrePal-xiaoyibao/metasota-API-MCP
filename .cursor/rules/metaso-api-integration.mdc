@@ -1,0 +1,119 @@
+---
+description: Rules for integrating with Metaso Search API endpoints and handling responses
+---
+# Metaso API Integration
+
+## API Configuration
+- **Base URL**: `https://metaso.cn/api/v1`
+- **Authentication**: Bearer token via `Authorization: Bearer ${API_KEY}` header
+- **API Key**: Must be provided via `METASO_API_KEY` environment variable
+- **Timeout**: 30 seconds (30000ms) for all API requests
+- Use `axios.create()` to configure a reusable instance with base headers
+
+## API Endpoints
+
+### Search Endpoint
+- **Path**: `/search`
+- **Method**: POST
+- **Required Parameters**:
+  - `q` (string): Search query keywords
+- **Optional Parameters**:
+  - `scope` (string): Search scope - `webpage`, `document`, `paper`, `image`, `video`, `podcast`
+  - `includeSummary` (boolean): Enable summary-based recall enhancement
+  - `includeRawContent` (boolean): Fetch original webpage content
+  - `size` (number): Number of results to return (default: 10)
+  - `conciseSnippet` (boolean): Return concise original text snippets
+
+### Reader Endpoint
+- **Path**: `/reader`
+- **Method**: POST
+- **Required Parameters**:
+  - `url` (string): URL to read
+- **Response Format**: Controlled by `Accept` header
+  - `Accept: text/plain` → Returns Markdown
+  - `Accept: application/json` → Returns JSON
+
+### Chat Completions Endpoint
+- **Path**: `/chat/completions`
+- **Method**: POST
+- **Models**: `ds-r1` (deepseekr1), `fast`, `fast_thinking`
+- **Supports**: Streaming responses (`stream: true`)
+- **Scopes**: `document`, `scholar`, `video`, `podcast` (for RAG-based Q&A)
+
+## Response Schema Validation
+- Always validate API responses using Zod schemas
+- Expected response structure:
+```typescript
+{
+  code: number,  // 0 indicates success
+  data: {
+    results: Array<{
+      title: string,
+      url: string,
+      content?: string,
+      rawContent?: string
+    }>,
+    summary?: string
+  }
+}
+```
+- Check `code !== 0` and throw appropriate errors
+- Handle optional fields gracefully (use `.optional()` in Zod schemas)
+
+## Error Handling Patterns
+- Catch `AxiosError` specifically to extract HTTP status and response data
+- Provide meaningful error messages: `API请求失败: ${status} - ${message}`
+- Always validate response schema before processing data
+- Log detailed errors to stderr for debugging
+- Return user-friendly error messages in MCP tool responses
+
+## Request Configuration
+- Set `Content-Type: application/json` header
+- Use appropriate `Accept` header for reader endpoint (text/plain or application/json)
+- Include all required parameters in request body
+- Apply default values for optional parameters when not provided
+
+## Response Formatting
+- Format search results in readable Markdown
+- Include emoji prefixes for visual clarity (🔍, 📄, 📰, 📊, ❌)
+- Structure output with clear sections (results list, summary)
+- Truncate long content appropriately (e.g., rawContent previews)
+- Include metadata like result count and URLs
+
+## Example Implementation Pattern
+```typescript
+const axiosInstance = axios.create({
+  baseURL: 'https://metaso.cn/api/v1',
+  headers: {
+    'Authorization': `Bearer ${process.env.METASO_API_KEY}`,
+    'Content-Type': 'application/json',
+  },
+  timeout: 30000,
+});
+
+async function performSearch(params: SearchParams): Promise<string> {
+  try {
+    const response = await axiosInstance.post('/search', {
+      q: params.q,
+      scope: params.scope || 'webpage',
+      includeSummary: params.includeSummary || false,
+      includeRawContent: params.includeRawContent || false,
+      size: params.size || 10,
+      conciseSnippet: params.conciseSnippet || false,
+    });
+    
+    const parsed = MetasoResponseSchema.parse(response.data);
+    if (parsed.code !== 0) {
+      throw new Error(`API返回错误码: ${parsed.code}`);
+    }
+    
+    // Format and return results
+    return formatSearchResults(parsed.data, params.q);
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      throw new Error(`API请求失败: ${error.response?.status} - ${error.response?.data?.message || error.message}`);
+    }
+    throw error;
+  }
+}
+```
