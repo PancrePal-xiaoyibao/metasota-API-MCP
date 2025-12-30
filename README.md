@@ -32,7 +32,7 @@
 ```bash
 # 克隆项目
 git clone https://github.com/SecretRichGarden/metasota-API-MCP.git
-cd metaso-search-mcp
+cd metasota-API-MCP
 
 # 安装依赖
 npm install
