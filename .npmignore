@@ -1,0 +1,7 @@
+.github/
+.codex/
+.cursor/
+docs/
+tests/
+node_modules/
+.env

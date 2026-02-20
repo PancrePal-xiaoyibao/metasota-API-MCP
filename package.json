@@ -24,6 +24,7 @@
   ],
   "scripts": {
     "clean": "rimraf dist",
+    "test": "node --test",
     "typecheck": "tsc --noEmit",
     "rebuild": "npm run clean && npm run build",
     "build": "tsc",
@@ -34,7 +35,10 @@
     "pack:local": "npm pack",
     "config:example": "metaso-mcp-config --client generic --print",
     "release:check": "npm run typecheck && npm run build && node scripts/release-check.mjs && npm run pack:dry",
-    "prepublishOnly": "npm run release:check"
+    "prepublishOnly": "npm run release:check",
+    "release:patch": "npm version patch -m \"chore(release): v%s\"",
+    "release:minor": "npm version minor -m \"chore(release): v%s\"",
+    "release:major": "npm version major -m \"chore(release): v%s\""
   },
   "keywords": [
     "mcp",
