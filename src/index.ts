@@ -384,7 +384,7 @@ class MetasoMCPServer {
     this.server = new Server(
       {
         name: 'metaso-search-mcp',
-        version: '1.0.0',
+        version: '1.1.0',
       },
       {
         capabilities: {

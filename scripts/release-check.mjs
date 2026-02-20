@@ -7,6 +7,7 @@ const projectRoot = process.cwd();
 const requiredPaths = [
   "dist/index.js",
   "dist/index.d.ts",
+  "dist/config-cli.js",
   "README.md",
   "LICENSE",
 ];

@@ -1,6 +1,6 @@
 {
   "name": "metaso-search-mcp",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "秘塔搜索 MCP 服务器 - 提供多维搜索、网页读取、智能问答功能",
   "type": "module",
   "main": "dist/index.js",
@@ -12,7 +12,8 @@
     }
   },
   "bin": {
-    "metaso-mcp": "./dist/index.js"
+    "metaso-mcp": "./dist/index.js",
+    "metaso-mcp-config": "./dist/config-cli.js"
   },
   "files": [
     "dist",
@@ -31,6 +32,7 @@
     "prepack": "npm run build",
     "pack:dry": "npm pack --dry-run",
     "pack:local": "npm pack",
+    "config:example": "metaso-mcp-config --client generic --print",
     "release:check": "npm run typecheck && npm run build && node scripts/release-check.mjs && npm run pack:dry",
     "prepublishOnly": "npm run release:check"
   },
