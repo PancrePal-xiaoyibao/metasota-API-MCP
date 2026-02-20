@@ -34,11 +34,8 @@
     "pack:dry": "npm pack --dry-run",
     "pack:local": "npm pack",
     "config:example": "metaso-mcp-config --client generic --print",
-    "release:check": "npm run typecheck && npm run build && node scripts/release-check.mjs && npm run pack:dry",
-    "prepublishOnly": "npm run release:check",
-    "release:patch": "npm version patch -m \"chore(release): v%s\"",
-    "release:minor": "npm version minor -m \"chore(release): v%s\"",
-    "release:major": "npm version major -m \"chore(release): v%s\""
+    "prepublishOnly": "npm run typecheck && npm run build && node scripts/release-check.mjs && npm run pack:dry",
+    "release": "npm run typecheck && npm run build && node scripts/release-check.mjs && npm run pack:dry && npm version patch -m \"chore(release): v%s\""
   },
   "keywords": [
     "mcp",

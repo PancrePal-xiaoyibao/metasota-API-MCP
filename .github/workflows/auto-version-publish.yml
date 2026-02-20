@@ -33,18 +33,14 @@ jobs:
         run: |
           npm test
 
-      - name: Release checks
-        run: |
-          npm run release:check
-
       - name: Configure git
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      - name: Bump patch version and tag
+      - name: Release
         run: |
-          npm version patch -m "chore(release): v%s [skip ci]"
+          npm run release
 
       - name: Push version bump and tag
         run: |
