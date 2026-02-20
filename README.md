@@ -286,12 +286,36 @@ metaso_reader({
 # 开发模式（监听文件变化）
 npm run dev
 
+# 类型检查
+npm run typecheck
+
 # 构建
 npm run build
+
+# 清理后重建
+npm run rebuild
 
 # 清理构建产物
 npm run clean
 ```
+
+## 📦 开源发布（npm + MCP 平台）
+
+```bash
+# 1) 发包前一键检查（类型检查 + 构建 + 关键文件校验 + npm 打包预览）
+npm run release:check
+
+# 2) 仅查看 npm 实际会发布哪些文件
+npm run pack:dry
+
+# 3) 本地生成 tgz 包（用于离线安装验证）
+npm run pack:local
+
+# 4) 正式发布到 npm（公开包）
+npm publish --access public
+```
+
+发布后可将 npm 包地址提交到 MCP 平台（如 Smithery、魔塔社区）进行收录。平台侧通常只需要可安装的 npm 包名和基本说明信息。
 
 ## 📄 许可证
 

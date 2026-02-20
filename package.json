@@ -4,24 +4,54 @@
   "description": "秘塔搜索 MCP 服务器 - 提供多维搜索、网页读取、智能问答功能",
   "type": "module",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
   "bin": {
     "metaso-mcp": "./dist/index.js"
   },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    ".env.example",
+    "config/*.example.json"
+  ],
   "scripts": {
+    "clean": "rimraf dist",
+    "typecheck": "tsc --noEmit",
+    "rebuild": "npm run clean && npm run build",
     "build": "tsc",
     "dev": "tsc --watch",
     "start": "node dist/index.js",
-    "clean": "rimraf dist",
-    "prepublishOnly": "npm run build"
+    "prepack": "npm run build",
+    "pack:dry": "npm pack --dry-run",
+    "pack:local": "npm pack",
+    "release:check": "npm run typecheck && npm run build && node scripts/release-check.mjs && npm run pack:dry",
+    "prepublishOnly": "npm run release:check"
   },
   "keywords": [
     "mcp",
     "metaso",
     "search",
     "ai",
-    "model-context-protocol"
+    "model-context-protocol",
+    "mcp-server",
+    "metaso-mcp"
   ],
-  "author": "",
+  "author": "Alex Huang (https://github.com/SecretRichGarden)",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SecretRichGarden/metasota-API-MCP.git"
+  },
+  "bugs": {
+    "url": "https://github.com/SecretRichGarden/metasota-API-MCP/issues"
+  },
+  "homepage": "https://github.com/SecretRichGarden/metasota-API-MCP#readme",
   "license": "MIT",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.0",
@@ -36,5 +66,8 @@
   },
   "engines": {
     "node": ">=18.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
