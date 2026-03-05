@@ -46,6 +46,38 @@ ModelScope/Smithery style (`command: npx`, `args: [package]`):
 }
 ```
 
+Local deployment (built from source, run `dist/index.js`) template:
+
+```json
+{
+  "mcpServers": {
+    "metaso-search-mcp-local": {
+      "command": "node",
+      "args": ["E:\\\\Development\\\\metasota-API-MCP\\\\dist\\\\index.js"],
+      "env": {
+        "METASO_API_KEY": "mk-your-api-key"
+      }
+    }
+  }
+}
+```
+
+macOS/Linux path example:
+
+```json
+{
+  "mcpServers": {
+    "metaso-search-mcp-local": {
+      "command": "node",
+      "args": ["/path/to/metasota-API-MCP/dist/index.js"],
+      "env": {
+        "METASO_API_KEY": "mk-your-api-key"
+      }
+    }
+  }
+}
+```
+
 ## One-command Config Generator | 一键生成配置
 
 Print config JSON:
